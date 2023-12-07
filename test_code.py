@@ -442,6 +442,8 @@ for epoch in range(STRAT_EPOCHS, END_EPOCHS):
 #
 
 from nltk.translate.bleu_score import sentence_bleu
+from nltk.translate.meteor_score import meteor_score, single_meteor_score
+import time
 
 
 with open('./idx_to_token.pickle', 'rb') as fr:
