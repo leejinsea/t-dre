@@ -65,12 +65,10 @@ class ActionDescriber(nn.Module):
         gt_captions = [t["caps"] for t in targets]
         gt_captions_length = [t["caps_len"] for t in targets]
 
-        caption_predicts = self.describer(features, gt_captions,
-                                     gt_captions_length)
+        caption_predicts = self.describer(features, gt_captions, gt_captions_length)
 
-        loss_caption = caption_loss(caption_predicts, gt_captions,
-                                    gt_captions_length)
         if self.training:
+            loss_caption = caption_loss(caption_predicts, gt_captions, gt_captions_length)
             return loss_caption
         else:
             return caption_predicts
@@ -423,7 +421,7 @@ for epoch in range(STRAT_EPOCHS, END_EPOCHS):
         image_set.append(img_list)
         trg_cap_set.append(trg_cap_list)
         pred_cap_set.append(cap_pred)
-        history.append(cap_pred.item())
+        # history.append(cap_pred.item())
         # loss.backward()
         # optimizer.step()
 
@@ -432,9 +430,8 @@ for epoch in range(STRAT_EPOCHS, END_EPOCHS):
         end.record()
         torch.cuda.synchronize()
 
-        print(
-            f'epc: {epoch + 1}/{END_EPOCHS} | iter: {itr + 1}/{len(test_loader)} | loss: {cap_pred.item():.8f} | time: {start.elapsed_time(end) / 1000:.2f}')
-            epoch_histories.append(sum(history) / len(history)) #1: 3.08
+        print(f'epc: 1/1 | iter: {itr + 1}/{len(test_loader)} | time: {start.elapsed_time(end) / 1000:.2f}')
+        # epoch_histories.append(sum(history) / len(history)) #1: 3.08
 
     torch.save(action_describer.state_dict(), f"./model_2023_1201_{epoch + 1}.pth")
 
@@ -443,4 +440,3 @@ for epoch in range(STRAT_EPOCHS, END_EPOCHS):
 # trg_cap_set is image.append(trg_cap_list)
 # pred_cap_set.append(cap_pred)
 #
-
