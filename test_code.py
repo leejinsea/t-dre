@@ -461,3 +461,51 @@ for target, predictions in zip(trg_cap_set, pred_cap_set):
         cnt += 1
         print(f'No.{cnt} | BLEU SCORE : {score1} | Means : {score / cnt}')
 
+
+# BLEU-1 SCORE, BLEU-2 SCORE, BLEU-3 SCORE, BLEU-4 SCORE, Meteor SCORE
+all_sentence_cnt = 0
+for pred_s in pred_cap_set:
+    for pred in pred_s:
+        all_sentence_cnt += 1
+
+cnt = 0
+list_score1 = []
+list_score2 = []
+list_score3 = []
+list_score4 = []
+list_meteor_score = []
+for target, predictions in zip(trg_cap_set, pred_cap_set):
+    reference = []
+    for cap in target[0]['caps']:
+        reference.append([idx_to_token[idx.item()] for idx in cap])
+    for prediction in predictions:
+        now_time = time.time()
+        candidate = [idx_to_token[idx.item()] for idx in prediction]
+        score1 = sentence_bleu(reference, candidate, weights=(1, 0, 0, 0))
+        score2 = sentence_bleu(reference, candidate, weights=(0, 1, 0, 0))
+        score3 = sentence_bleu(reference, candidate, weights=(0, 0, 1, 0))
+        score4 = sentence_bleu(reference, candidate, weights=(0, 0, 0, 1))
+        meteor = meteor_score(reference, candidate)
+        list_score1.append(score1)
+        list_score2.append(score2)
+        list_score3.append(score3)
+        list_score4.append(score4)
+        list_meteor_score.append(meteor)
+        cnt += 1
+
+        print(f'Count {cnt} / {all_sentence_cnt} | BLEU-1 SCORE : {score1:.3f} | BLEU-2 SCORE : {score2:.3f} | '
+              f'BLEU-3 SCORE : {score3:.3f} | BLEU-4 SCORE : {score4:.3f} | Meteor SCORE : {meteor:.3f} | '
+              f'time : {time.time() - now_time}:.2f')
+
+array_score1 = np.array(list_score1)
+array_score2 = np.array(list_score2)
+array_score3 = np.array(list_score3)
+array_score4 = np.array(list_score4)
+array_meteor_score = np.array(list_meteor_score)
+
+np.savetxt('score1.csv', array_score1, delimiter=",")
+np.savetxt('score2.csv', array_score2, delimiter=",")
+np.savetxt('score2.csv', array_score3, delimiter=",")
+np.savetxt('score2.csv', array_score4, delimiter=",")
+np.savetxt('meteor_score.csv', array_meteor_score, delimiter=",")
+
