@@ -447,6 +447,7 @@ from nltk.translate.bleu_score import sentence_bleu
 with open('./idx_to_token.pickle', 'rb') as fr:
     idx_to_token = pickle.load(fr)
 
+# BLEU-1 SCORE
 cnt = 0
 score = 0
 for target, predictions in zip(trg_cap_set, pred_cap_set):
