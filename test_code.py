@@ -440,3 +440,23 @@ for epoch in range(STRAT_EPOCHS, END_EPOCHS):
 # trg_cap_set is image.append(trg_cap_list)
 # pred_cap_set.append(cap_pred)
 #
+
+from nltk.translate.bleu_score import sentence_bleu
+
+
+with open('./idx_to_token.pickle', 'rb') as fr:
+    idx_to_token = pickle.load(fr)
+
+cnt = 0
+score = 0
+for target, predictions in zip(trg_cap_set, pred_cap_set):
+    reference = []
+    for cap in target[0]['caps']:
+        reference.append([idx_to_token[idx.item()] for idx in cap])
+    for prediction in predictions:
+        candidate = [idx_to_token[idx.item()] for idx in prediction]
+        score1 = sentence_bleu(reference, candidate, weights=(1, 0, 0, 0))
+        score += score1
+        cnt += 1
+        print(f'No.{cnt} | BLEU SCORE : {score1} | Means : {score / cnt}')
+
