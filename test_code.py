@@ -439,6 +439,8 @@ for epoch in range(STRAT_EPOCHS, END_EPOCHS):
     torch.save(action_describer.state_dict(), f"./model_2023_1201_{epoch + 1}.pth")
 
 # finally
-#
+# image_set is test image list  .append(img_list)
+# trg_cap_set is image.append(trg_cap_list)
+# pred_cap_set.append(cap_pred)
 #
 
